@@ -140,6 +140,43 @@ void PIC24::erase_chip() {
 }
 
 
+void PIC24::erase_page(uint32_t addr) {
+
+    icsp
+    << NOP
+    << JMP(device.START_ADDR)
+    << NOP
+    << LDI(device.NVMCON_ERASE_PAGE, W10)
+    << STO(W10, device.NVMCON_ADDR)
+    << LDI(upper8(addr), W0)
+    << STO(W0, device.TBLPAG_ADDR)
+    << LDI(lower16(addr), W0)
+    << TBLWTL(W0, DIRECT, W0, INDIRECT)
+    << NOP
+    << NOP
+    << BSET(device.NVMCON_ADDR, NVMCOM_WR_BIT)
+    << NOP
+    << NOP;
+
+    while (1) {
+        uint16_t visi = 0;
+
+        icsp
+        << JMP(device.START_ADDR)
+        << NOP
+        << RET(device.NVMCON_ADDR, W2)
+        << STO(W2, device.VISI_ADDR)
+        << NOP
+        >> visi
+        << NOP;
+
+        if (!(visi & device.NVMCON_WRITING)) {
+            return;
+        }
+    }
+}
+
+
 void PIC24::write_code_words(std::vector<uint32_t> &data) {
     std::vector<uint32_t>::const_iterator iter = data.begin();
     uint32_t addr = 0;

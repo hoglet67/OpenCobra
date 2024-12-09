@@ -134,11 +134,6 @@ private:
     uint32_t JMP(uint32_t addr);
 
     /*
-     * Reads the given memory location.
-     */
-    uint32_t read_word(uint32_t addr);
-
-    /*
      * Writes up to 128 words at once.
      */
     uint32_t write_128words(uint32_t addr,
@@ -176,6 +171,11 @@ public:
     PIC24(HAL &hal, const DEVICE &device);
 
     /*
+     * Reads the given memory location.
+     */
+    uint32_t read_word(uint32_t addr);
+
+    /*
      * Reads the device id
      */
     void read_device_id(uint16_t &higher, uint16_t &lower);
@@ -184,6 +184,11 @@ public:
      * Erases the complete program memory
      */
     void erase_chip();
+
+    /*
+     * Erases the complete program memory
+     */
+    void erase_page(uint32_t addr);
 
     /*
      * Writes the given memory contents to the device

@@ -61,6 +61,11 @@ typedef struct {
     uint32_t NVMCON_ERASE_ALL;
 
     /*
+     * Contains the bit-pattern written to NVMCON to erase a a page of memory
+     */
+    uint32_t NVMCON_ERASE_PAGE;
+
+    /*
      * Contains the bit-pattern written to NVMCON to write a row of data
      */
     uint32_t NVMCON_WRITE_ROW;
@@ -100,6 +105,7 @@ static const DEVICE PIC24FJ32GB0XX = {
         0x200,
         0xFF0000,
         0x404F,
+        0x4042,
         0x4001,
         0x4003,
         0x8000,
@@ -120,6 +126,7 @@ static const DEVICE PIC24FJ64GB0XX = {
         0x200,
         0xFF0000,
         0x404F,
+        0x4042,
         0x4001,
         0x4003,
         0x8000,
@@ -128,14 +135,35 @@ static const DEVICE PIC24FJ64GB0XX = {
 };
 
 /*
+ * Describes a PIC24FJ64GB0XX device
+ */
+static const DEVICE PIC24FJ128GA0XX = {
+        "PIC24FJ128GA0XX",
+        0x4D434851,	// ICSP Code
+        32,		// ICSP Code Length
+        0x54,		// TBLPAG ADDR
+        0x760,		// NVMCOM ADDR
+        0x784,		// VISI ADDR
+        0x200,		// START ADDR
+        0xFF0000,	// DEVICE ID ADDR
+        0x404F,		// NVMCOM ERASE ALL
+        0x4042,		// NVMCOM ERASE PAGE
+        0x4001,		// NVMCOM WRITE ROW
+        0x4003,		// NVMCOM WRITE WORD
+        0x8000,		// NVMCOM WRITING
+        0x0157F8,	// CONFIG WORD START ADDR
+        4		// NO OF CONFIG WORDS
+};
+
+/*
  * Enumerates all devices
  */
-static const DEVICE DEVICES[] = {PIC24FJ32GB0XX, PIC24FJ64GB0XX};
+static const DEVICE DEVICES[] = {PIC24FJ32GB0XX, PIC24FJ64GB0XX, PIC24FJ128GA0XX};
 
 /*
  * Contains the number of devices in the DEVICES array
  */
-static const int NUM_DEVICES = 2;
+static const int NUM_DEVICES = 3;
 
 
 #endif //RASPICSP_DEVICES_H
